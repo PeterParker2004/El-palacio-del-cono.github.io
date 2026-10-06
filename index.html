@@ -1,0 +1,859 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>El Palacio del Cono</title>
+    <style>
+      :root {
+        --bg: #fff7fb;
+        --bg-2: #f4efff;
+        --card: #ffffff;
+        --text: #2a1d36;
+        --muted: #655778;
+        --primary: #ff6fb5;
+        --primary-dark: #b252d6;
+        --secondary: #3ec9c1;
+        --secondary-dark: #1aa8af;
+        --accent: #f6d7ff;
+        --soft: #ecf9ff;
+        --line: rgba(109, 72, 142, 0.12);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(180deg, var(--bg) 0%, #ffffff 100%);
+        color: var(--text);
+      }
+      a { color: inherit; text-decoration: none; }
+      img { max-width: 100%; display: block; }
+
+      .container {
+        width: min(1100px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        background: rgba(255, 247, 251, 0.9);
+        border-bottom: 1px solid rgba(109, 72, 142, 0.08);
+        backdrop-filter: blur(8px);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        min-height: 72px;
+        gap: 16px;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+      }
+
+      .logo-mark {
+        width: min(180px, 32vw);
+        height: auto;
+        max-height: 54px;
+        display: block;
+        object-fit: contain;
+      }
+
+      .menu {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .menu a {
+        color: var(--muted);
+        font-weight: 700;
+      }
+
+      .cta {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 999px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(178, 82, 214, 0.18);
+        transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+      }
+
+      .cta:hover,
+      .btn:hover,
+      .mini-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 26px rgba(178, 82, 214, 0.18);
+        filter: saturate(1.06);
+      }
+
+      .hero {
+        padding: 56px 0 34px;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 32px;
+        align-items: center;
+      }
+
+      .tag {
+        display: inline-block;
+        background: rgba(255, 111, 181, 0.12);
+        color: var(--primary-dark);
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 18px 0 16px;
+        font-size: clamp(2.8rem, 6vw, 5rem);
+        line-height: 0.95;
+        letter-spacing: -0.06em;
+      }
+
+      .lead {
+        margin: 0 0 26px;
+        max-width: 620px;
+        color: var(--muted);
+        font-size: 1.08rem;
+        line-height: 1.7;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 999px;
+        padding: 14px 22px;
+        cursor: pointer;
+        font-weight: 800;
+        transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      }
+
+      .btn.primary {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        box-shadow: 0 10px 20px rgba(178, 82, 214, 0.12);
+      }
+
+      .btn.secondary {
+        background: white;
+        border: 1px solid var(--line);
+        color: var(--text);
+      }
+
+      .stats {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .stats li {
+        background: rgba(255,255,255,0.7);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 10px 14px;
+      }
+
+      .stats span {
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .card {
+        background: linear-gradient(180deg, #fffafd 0%, #f0f8ff 100%);
+        border: 1px solid rgba(109, 72, 142, 0.08);
+        border-radius: 30px;
+        box-shadow: 0 10px 28px rgba(136, 87, 170, 0.08);
+        padding: 24px;
+      }
+
+      .product-box {
+        background: linear-gradient(180deg, #ffffff, #dffdfb);
+        border-radius: 26px;
+        min-height: 300px;
+        display: grid;
+        place-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ice-emoji {
+        font-size: 9rem;
+        filter: drop-shadow(0 18px 30px rgba(76, 196, 196, 0.35));
+      }
+
+      .badge {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        background: rgba(255,255,255,0.9);
+        border-radius: 16px;
+        padding: 10px 14px;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 800;
+        color: var(--muted);
+      }
+
+      .product-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding-top: 20px;
+      }
+
+      .product-footer h3 {
+        margin: 0 0 6px;
+        font-size: 1.8rem;
+      }
+
+      .product-footer p {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .price {
+        font-size: 2.2rem;
+        font-weight: 900;
+      }
+
+      .popular {
+        padding: 40px 0 20px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 24px;
+      }
+
+      .section-head h2 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+        letter-spacing: -0.05em;
+      }
+
+      .section-head span {
+        color: var(--primary-dark);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.8rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+      }
+
+      .item {
+        background: #f8f1ea;
+        border: 1px solid rgba(109, 72, 142, 0.08);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 10px 18px rgba(54, 30, 78, 0.06);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+      }
+
+      .item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 26px rgba(54, 30, 78, 0.10);
+      }
+
+      .item-visual {
+        position: relative;
+        height: 220px;
+        display: grid;
+        place-items: center;
+        font-size: 5rem;
+        background: linear-gradient(180deg, #f9f4f0 0%, #f2ebf5 100%);
+        border-bottom: 1px solid rgba(109, 72, 142, 0.06);
+      }
+
+      .item-visual::before {
+        content: "";
+        position: absolute;
+        inset: 14px 14px auto auto;
+        background: rgba(255,255,255,0.9);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 0.62rem;
+        font-weight: 800;
+        color: var(--primary-dark);
+      }
+
+      .item-visual[data-label="especial"]::before { content: "Especial"; }
+      .item-visual[data-label="nuevo"]::before { content: "Nuevo"; }
+      .item-visual[data-label="popular"]::before { content: "Popular"; }
+
+      .item-body {
+        padding: 18px 16px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+      }
+
+      .item-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .item-top h3 {
+        margin: 0;
+        font-size: 1.6rem;
+        letter-spacing: -0.04em;
+      }
+
+      .item-top strong {
+        font-size: 1.2rem;
+        color: var(--primary-dark);
+      }
+
+      .item-body p {
+        margin: 0;
+        line-height: 1.6;
+        color: var(--muted);
+        min-height: 76px;
+      }
+
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        margin-top: auto;
+      }
+
+      .tag-mini {
+        display: inline-block;
+        background: rgba(62, 201, 193, 0.14);
+        color: var(--secondary-dark);
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+      }
+
+      .mini-btn {
+        background: linear-gradient(135deg, #ff7db9, #d96ae7);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        box-shadow: 0 8px 16px rgba(217, 106, 231, 0.2);
+      }
+
+      .about {
+        padding: 48px 0 70px;
+      }
+
+      .about-box {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: center;
+      }
+
+      .about-visual {
+        min-height: 320px;
+        display: grid;
+        place-items: center;
+        font-size: 7rem;
+        border-radius: 28px;
+        background: linear-gradient(135deg, #f9d9ff, #9feee7);
+        border: 1px solid var(--line);
+      }
+
+      .about-copy {
+        background: white;
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        padding: 34px 28px;
+      }
+
+      .about-copy h2 {
+        margin: 18px 0 16px;
+        font-size: clamp(2rem, 3vw, 2.8rem);
+        letter-spacing: -0.04em;
+      }
+
+      .about-copy p {
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      ul.bullets {
+        list-style: none;
+        padding: 0;
+        margin: 22px 0 0;
+        display: grid;
+        gap: 12px;
+      }
+
+      ul.bullets li {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+      }
+
+      ul.bullets li::before {
+        content: "✓";
+        width: 24px;
+        height: 24px;
+        display: inline-grid;
+        place-items: center;
+        border-radius: 50%;
+        background: rgba(62, 201, 193, 0.15);
+        color: var(--secondary-dark);
+      }
+
+      .cta-box {
+        background: linear-gradient(135deg, #b252d6, #2bb8bd);
+        color: white;
+        border-radius: 28px;
+        padding: 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .cta-box h3 {
+        margin: 0 0 6px;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        letter-spacing: -0.05em;
+      }
+
+      .cta-box p {
+        margin: 0;
+        color: rgba(255,255,255,.78);
+      }
+
+      .find-us {
+        max-width: 1160px;
+        margin: 0 auto;
+        padding: 20px 20px 80px;
+      }
+
+      .find-head {
+        text-align: center;
+        margin-bottom: 28px;
+      }
+
+      .pin-badge {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ff6e8a, #d44765);
+        display: inline-block;
+        position: relative;
+        box-shadow: 0 6px 16px rgba(212, 71, 101, 0.35);
+        margin-bottom: 14px;
+      }
+
+      .pin-badge::after {
+        content: "";
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: rgba(255,255,255,0.85);
+        border-radius: 50%;
+        top: 7px;
+        left: 7px;
+      }
+
+      .find-head h2 {
+        margin: 0;
+        font-size: clamp(2.1rem, 5vw, 3.3rem);
+        color: #1f8a72;
+        letter-spacing: -0.05em;
+      }
+
+      .find-head p {
+        margin: 16px 0 0;
+        font-size: 1.1rem;
+        color: #5f4d55;
+      }
+
+      .find-grid {
+        display: grid;
+        grid-template-columns: 0.96fr 1.04fr;
+        gap: 28px;
+        align-items: stretch;
+      }
+
+      .info-stack {
+        display: grid;
+        gap: 18px;
+      }
+
+      .info-card {
+        background: #f4efe7;
+        border-radius: 18px;
+        border: 1px solid rgba(121, 93, 63, 0.08);
+        padding: 22px 22px 18px;
+        box-shadow: 0 6px 20px rgba(70, 60, 45, 0.05);
+      }
+
+      .info-card .label {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.92rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        color: #f15a2a;
+        margin-bottom: 10px;
+      }
+
+      .info-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: inline-grid;
+        place-items: center;
+        background: #f77c4f;
+        color: #fff;
+        font-size: 0.95rem;
+        box-shadow: 0 8px 18px rgba(247, 124, 79, 0.26);
+      }
+
+      .info-card h3 {
+        margin: 0 0 10px;
+        font-size: 1.1rem;
+        color: var(--text);
+      }
+
+      .info-card p,
+      .info-card div {
+        margin: 0;
+        color: #4f4045;
+        line-height: 1.45;
+        font-size: 1.02rem;
+      }
+
+      .hours-line {
+        display: block;
+        margin: 6px 0;
+      }
+
+      .route-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #0f5b4b;
+        color: white;
+        width: 100%;
+        border: none;
+        border-radius: 14px;
+        padding: 18px 26px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 10px 24px rgba(15, 91, 75, 0.18);
+        transition: transform 0.2s ease;
+      }
+
+      .route-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .map-card {
+        position: relative;
+        min-height: 420px;
+        border-radius: 18px;
+        overflow: hidden;
+        border: 1px solid rgba(110, 152, 140, 0.2);
+        box-shadow: 0 10px 24px rgba(30, 74, 61, 0.08);
+        background: #edf5f1;
+      }
+
+      .map-card iframe {
+        width: 100%;
+        height: 100%;
+        min-height: 420px;
+        border: 0;
+        display: block;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px 0 36px;
+        color: var(--muted);
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid, .about-box, .grid { grid-template-columns: 1fr; }
+        .nav { flex-wrap: wrap; justify-content: center; padding: 14px 0; }
+      }
+
+      @media (max-width: 560px) {
+        .actions, .cta-box, .product-footer { flex-direction: column; align-items: flex-start; }
+        .btn, .cta { width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <div class="logo">
+          <img class="logo-mark" src="logo-palacio.png" alt="El Palacio del Cono" />
+        </div>
+
+        <nav class="menu" aria-label="Navegación principal">
+          <a href="#inicio">Inicio</a>
+          <a href="#productos">Productos</a>
+          <a href="#nosotros">Nosotros</a>
+          <a href="#visitanos">Visítanos</a>
+        </nav>
+
+        <button class="cta">Pedir ahora</button>
+      </div>
+    </header>
+
+    <main id="inicio">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <span class="tag">Helados artesanales</span>
+            <h1>Helados que alegran tus días.</h1>
+            <p class="lead">
+              Preparados artesanalmente con amor, fruta fresca y el toque mágico que te encanta.
+              Elige tu favorito y disfruta una experiencia dulce, fresca y deliciosa.
+            </p>
+
+            <div class="actions">
+              <button class="btn primary">Ver sabores</button>
+              <button class="btn secondary">Hacer pedido</button>
+            </div>
+
+            <ul class="stats" aria-label="Productos destacados">
+              <li><span>Sabores artesanales</span></li>
+              <li><span>Preparación fresca</span></li>
+              <li><span>Atención cercana</span></li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="product-box">
+              <div class="badge">Especial</div>
+              <div class="ice-emoji">🍦</div>
+            </div>
+            <div class="product-footer">
+              <div>
+                <h3>Helado especial</h3>
+              </div>
+              <div class="price">$0.000</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="popular" id="productos">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <span>Sabores</span>
+              <h2>Los favoritos del día</h2>
+            </div>
+          </div>
+
+          <div class="grid">
+            <article class="item">
+              <div class="item-visual" data-label="especial">🍓</div>
+              <div class="item-body">
+                <div class="item-top">
+                  <h3>Helado 1</h3>
+                  <strong>$0.000</strong>
+                </div>
+                <p>Helado cremoso con trozos naturales de fresa y un toque azucarado.</p>
+                <div class="meta">
+                  <span class="tag-mini">Clásico</span>
+                  <button class="mini-btn">+ Añadir</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="item">
+              <div class="item-visual" data-label="nuevo">🍋</div>
+              <div class="item-body">
+                <div class="item-top">
+                  <h3>Helado 2</h3>
+                  <strong>$0.000</strong>
+                </div>
+                <p>Refrescante sabor cítrico, ideal para los días más calurosos.</p>
+                <div class="meta">
+                  <span class="tag-mini">Fresco</span>
+                  <button class="mini-btn">+ Añadir</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="item">
+              <div class="item-visual" data-label="popular">🍫</div>
+              <div class="item-body">
+                <div class="item-top">
+                  <h3>Helado 3</h3>
+                  <strong>$0.000</strong>
+                </div>
+                <p>Un sabor intenso y suave a la vez, perfecto para cualquier momento.</p>
+                <div class="meta">
+                  <span class="tag-mini">Premium</span>
+                  <button class="mini-btn">+ Añadir</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="find-us" id="visitanos">
+        <div class="find-head">
+          <span class="pin-badge" aria-hidden="true"></span>
+          <h2>¿Dónde encontrarnos?</h2>
+          <p>Pasa por la tienda o pide a domicilio — estamos en Santa Marta.</p>
+        </div>
+
+        <div class="find-grid">
+          <div class="info-stack">
+            <div class="info-card">
+              <div class="label"><span class="info-icon">◎</span> Dirección</div>
+              <h3>ESTAMOS EN</h3>
+              <h3>51 L2 URB. CIUDADELA</h3>
+              <p>Santa Marta, Colombia</p>
+              <p>Justo al frente de la iglesia</p>
+              <h3>¡TE ESPERAMOS!</h3>
+            </div>
+
+            <div class="info-card">
+              <div class="label"><span class="info-icon">◔</span> Horario</div>
+              <div>
+                <strong>Lunes — Viernes</strong>
+                <span class="hours-line">1:00 pm — 9:00 pm</span>
+              </div>
+              <div style="margin-top: 12px;">
+                <strong>Sábado — Domingo</strong>
+                <span class="hours-line">10:00 am — 9:00 pm</span>
+              </div>
+            </div>
+
+            <button class="route-btn">✦ Cómo llegar</button>
+          </div>
+
+          <div class="map-card" aria-label="Mapa de ubicación">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d978.3751454106997!2d-74.19173783304562!3d11.224539366675181!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sMZ%2051%20L2!5e0!3m2!1ses-419!2sus!4v1791250897765!5m2!1ses-419!2sus"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="about" id="nosotros">
+        <div class="container about-box">
+          <div class="about-visual">🍨</div>
+          <div class="about-copy">
+            <span class="tag">Nuestra historia</span>
+            <h2>La dulzura hecha con pasión.</h2>
+            <p>
+              En El Palacio del Cono cada receta se prepara con ingredientes cuidadosamente seleccionados,
+              cuidando la textura, el sabor y la experiencia de cada bocado.
+            </p>
+            <ul class="bullets">
+              <li>Ingredientes frescos y naturales.</li>
+              <li>Preparación artesanal cada día.</li>
+              <li>Atención cercana y cálida.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="container" id="visitanos">
+        <div class="cta-box">
+          <div>
+            <h3>Ven a disfrutar</h3>
+            <p>Santa Marta, Colombia · Helados artesanales para todos los gustos.</p>
+          </div>
+          <button class="btn primary">Reservar ahora</button>
+        </div>
+      </section>
+    </main>
+
+    <footer style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 28px;">
+      <a
+        href="https://www.instagram.com/elpalaciodelcono_1?stkn=NHI5dmNuMHowa3pm"
+        target="_blank"
+        rel="noreferrer"
+        style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,0.7); border: 1px solid rgba(107, 82, 138, 0.12); color: #2f2550; text-decoration: none; font-weight: 800; box-shadow: 0 12px 28px rgba(164, 104, 184, 0.08); transition: transform 0.2s ease, box-shadow 0.2s ease;"
+        aria-label="Instagram de El Palacio del Cono"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/>
+        </svg>
+        <span>elpalaciodelcono_1</span>
+      </a>
+      <a
+        href="https://www.facebook.com/429685073560354?ref=PROFILE_EDIT_xav_ig_profile_page_web"
+        target="_blank"
+        rel="noreferrer"
+        style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 18px; border-radius: 999px; background: rgba(255,255,255,0.7); border: 1px solid rgba(107, 82, 138, 0.12); color: #2f2550; text-decoration: none; font-weight: 800; box-shadow: 0 12px 28px rgba(164, 104, 184, 0.08); transition: transform 0.2s ease, box-shadow 0.2s ease;"
+        aria-label="Facebook de El Palacio del Cono"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M13.4 21v-8.2h2.8l.4-3.2h-3.2v-2c0-.9.3-1.6 1.6-1.6h1.7V3.1c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2v2.4H7.6v3.2h2.7V21h3.1Z"/>
+        </svg>
+        <span>El Palacio del Cono</span>
+      </a>
+      <div>© 2026 El Palacio del Cono · Helados Artesanales</div>
+    </footer>
+  </body>
+</html>
