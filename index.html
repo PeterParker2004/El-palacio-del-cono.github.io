@@ -621,6 +621,137 @@
         display: block;
       }
 
+      .catalog {
+        padding: 44px 0 52px;
+        background: linear-gradient(180deg, rgba(236, 249, 255, 0.55), rgba(255, 255, 255, 0));
+      }
+
+      .catalog-intro {
+        margin: 10px 0 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .catalog-grid {
+        display: grid;
+        gap: 34px;
+        min-width: 0;
+      }
+
+      .catalog-row {
+        min-width: 0;
+      }
+
+      .catalog-row-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+
+      .catalog-row-heading h3 {
+        margin: 0;
+        font-size: 1.6rem;
+      }
+
+      .catalog-row-heading span {
+        display: block;
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .carousel-controls {
+        display: flex;
+        gap: 8px;
+      }
+
+      .carousel-control {
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        background: white;
+        color: var(--text);
+        font-size: 1.5rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .carousel-control:hover:not(:disabled) {
+        background: var(--secondary-dark);
+        color: white;
+      }
+
+      .carousel-control:disabled {
+        opacity: 0.38;
+        cursor: default;
+      }
+
+      .catalog-track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: clamp(240px, 27vw, 300px);
+        gap: 20px;
+        overflow-x: auto;
+        min-width: 0;
+        padding: 2px 2px 18px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(26, 168, 175, 0.55) transparent;
+      }
+
+      .catalog-track > .item {
+        scroll-snap-align: start;
+      }
+
+      .item-visual[data-label="menu"]::before { content: "Menú"; }
+
+      .quantity-button {
+        flex: 0 0 auto;
+        width: 36px;
+        height: 36px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(62, 201, 193, 0.16);
+        color: var(--secondary-dark);
+        font-size: 1.25rem;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .quantity-button:hover {
+        background: var(--secondary-dark);
+        color: white;
+      }
+
+      .order-summary {
+        margin-top: 24px;
+        padding: 20px 0 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .order-heading,
+      .order-line,
+      .order-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .order-heading h3 { margin: 0; font-size: 1.25rem; }
+      .order-count { color: var(--muted); font-weight: 700; }
+      .order-items { list-style: none; padding: 0; margin: 12px 0; }
+      .order-line { padding: 10px 0; border-bottom: 1px solid var(--line); }
+      .order-line-name { flex: 1; min-width: 0; }
+      .order-line-name small { display: block; margin-top: 3px; color: var(--muted); }
+      .quantity-controls { display: flex; align-items: center; gap: 10px; }
+      .quantity-button { width: 30px; height: 30px; font-size: 1rem; }
+      .order-empty { margin: 12px 0; color: var(--muted); }
+      .order-total { padding-top: 14px; font-size: 1.1rem; font-weight: 900; }
+
       footer {
         text-align: center;
         padding: 20px 0 36px;
@@ -629,12 +760,15 @@
 
       @media (max-width: 900px) {
         .hero-grid, .about-box, .grid { grid-template-columns: 1fr; }
+        .catalog-track { grid-auto-columns: minmax(260px, 42vw); }
         .nav { flex-wrap: wrap; justify-content: center; padding: 14px 0; }
       }
 
       @media (max-width: 560px) {
         .actions, .cta-box, .product-footer { flex-direction: column; align-items: flex-start; }
         .btn, .cta { width: 100%; }
+        .catalog-track { grid-auto-columns: min(82vw, 300px); }
+        .catalog-row-heading h3 { font-size: 1.35rem; }
       }
     </style>
   </head>
@@ -648,6 +782,7 @@
         <nav class="menu" aria-label="Navegación principal">
           <a href="#inicio">Inicio</a>
           <a href="#productos">Productos</a>
+          <a href="#menu">Menú</a>
           <a href="#nosotros">Nosotros</a>
           <a href="#visitanos">Visítanos</a>
         </nav>
@@ -749,6 +884,33 @@
               </div>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section class="catalog" id="menu">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <span>Menú completo</span>
+              <h2>Elige algo delicioso</h2>
+              <p class="catalog-intro">Sabores y antojos para cualquier momento.</p>
+            </div>
+          </div>
+
+          <div class="catalog-grid" id="catalog-rows" aria-label="Productos por categoría"></div>
+
+          <section class="order-summary" aria-labelledby="order-title">
+            <div class="order-heading">
+              <h3 id="order-title">Tu pedido</h3>
+              <span class="order-count" id="order-count">0 productos</span>
+            </div>
+            <ul class="order-items" id="order-items"></ul>
+            <p class="order-empty" id="order-empty">Aún no has agregado productos.</p>
+            <div class="order-total">
+              <span>Total</span>
+              <span id="order-total">$0</span>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -855,5 +1017,199 @@
       </a>
       <div>© 2026 El Palacio del Cono · Helados Artesanales</div>
     </footer>
+    <script>
+      const menuProducts = [
+        { category: "Infantil", name: "Sr. Misaui", price: 8000 },
+        { category: "Infantil", name: "Vaca Lola", price: 8000 },
+        { category: "Infantil", name: "Dr. Sextavio", price: 8000 },
+        { category: "Infantil", name: "Ratón Pérez", price: 8000 },
+        { category: "Infantil", name: "La Lechuza", price: 8000 },
+        { category: "Infantil", name: "Detén el tráfico", price: 10000 },
+        { category: "Infantil", name: "Abejita al panal", price: 10000 },
+        { category: "Infantil", name: "Franklin la tortuga", price: 10000 },
+        { category: "Infantil", name: "Osito cariñosito", price: 10000 },
+        { category: "Infantil", name: "Payaso Plim Plim", price: 10000 },
+        { category: "Malteadas", name: "Especial", price: 15000 },
+        { category: "Malteadas", name: "Explosión de colores", price: 17000 },
+        { category: "Malteadas", name: "Milo Plus", price: 15000 },
+        { category: "Malteadas", name: "Waffle", price: 17000 },
+        { category: "Malteadas", name: "Chocomelo", price: 17000 },
+        { category: "Malteadas", name: "La Reina del Palacio", price: 20000 },
+        { category: "Waffles", name: "Chocofresa", price: 16000 },
+        { category: "Waffles", name: "Sensación", price: 18000 },
+        { category: "Waffles", name: "Dulce momento", price: 20000 },
+        { category: "Copas", name: "Galleta", price: 15000 },
+        { category: "Copas", name: "Plops", price: 15000 },
+        { category: "Copas", name: "Arcoíris", price: 13000 },
+        { category: "Copas", name: "Torta sorpresa", price: 15000 },
+        { category: "Copas", name: "Kokopa", price: 17000 },
+        { category: "Copas", name: "Copa Baileys", price: 15000 },
+        { category: "Copas", name: "Reina coqueta X2", price: 24000 },
+        { category: "Copas", name: "Tesoro del Rey X5", price: 60000 },
+        { category: "Frutas", name: "Rosita fresita", price: 15000 },
+        { category: "Frutas", name: "Frutos rojos", price: 16000 },
+        { category: "Frutas", name: "Banana Split", price: 18000 },
+        { category: "Frutas", name: "Ensalada", price: 20000 },
+        { category: "Fresas con crema", name: "Tradicional", price: 15000 },
+        { category: "Fresas con crema", name: "Durazno", price: 17000 },
+        { category: "Fresas con crema", name: "Combinada", price: 20000 },
+        { category: "Batidos", name: "Piña colada", price: 18000 },
+        { category: "Batidos", name: "Fresa pecado", price: 18000 },
+        { category: "Batidos", name: "Pasión salvaje", price: 18000 },
+        { category: "Batidos", name: "Mora mística", price: 18000 },
+        { category: "Batidos", name: "Nevado de café", price: 18000 },
+        { category: "Limonadas", name: "Cerezada", price: 13000 },
+        { category: "Limonadas", name: "Coco", price: 18000 },
+        { category: "Micheladas", name: "Frutas verdes", price: 16000 },
+        { category: "Micheladas", name: "Frutas amarillas", price: 16000 },
+        { category: "Micheladas", name: "Frutas rojas", price: 16000 },
+        { category: "Obleas", name: "Oblea sencilla", price: 7000 },
+        { category: "Obleas", name: "Milo Oblea", price: 8000 },
+        { category: "Obleas", name: "Tropical", price: 11000 },
+        { category: "Conos, Gomitas y Galletas", name: "Gomitas enchiladas (bolsa)", price: 4000 },
+        { category: "Conos, Gomitas y Galletas", name: "Cono sencillo", price: 5500 },
+        { category: "Conos, Gomitas y Galletas", name: "Cono doble", price: 9000 },
+        { category: "Conos, Gomitas y Galletas", name: "Galleta KokoBakery", price: 10000 },
+        { category: "Conos, Gomitas y Galletas", name: "Gomitas enchiladas (vaso + paleta)", price: 12000 },
+        { category: "Postres", name: "Canasta", price: 11000 },
+        { category: "Postres", name: "Brownie con helado", price: 15000 },
+        { category: "Postres", name: "Koko Sandwich", price: 22000 }
+      ];
+
+      const money = new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumFractionDigits: 0
+      });
+      const categories = [...new Set(menuProducts.map((product) => product.category))];
+      const categoryIcons = {
+        "Infantil": "🍭",
+        "Malteadas": "🥤",
+        "Waffles": "🧇",
+        "Copas": "🍨",
+        "Frutas": "🍓",
+        "Fresas con crema": "🍓",
+        "Batidos": "🥤",
+        "Limonadas": "🍋",
+        "Micheladas": "🍹",
+        "Obleas": "🧇",
+        "Conos, Gomitas y Galletas": "🍦",
+        "Postres": "🍰"
+      };
+      const quantities = new Map();
+      const catalogRows = document.querySelector("#catalog-rows");
+      const orderItems = document.querySelector("#order-items");
+
+      function renderCatalog() {
+        catalogRows.innerHTML = categories.map((category, index) => {
+          const products = menuProducts.filter((product) => product.category === category);
+          const trackId = `catalog-track-${index}`;
+          return `
+            <section class="catalog-row" aria-labelledby="catalog-category-${index}">
+              <div class="catalog-row-heading">
+                <div>
+                  <h3 id="catalog-category-${index}">${category}</h3>
+                  <span>${products.length} ${products.length === 1 ? "producto" : "productos"}</span>
+                </div>
+                <div class="carousel-controls">
+                  <button class="carousel-control" type="button" data-carousel-target="${trackId}" data-scroll="-1" aria-label="Productos anteriores de ${category}" disabled>‹</button>
+                  <button class="carousel-control" type="button" data-carousel-target="${trackId}" data-scroll="1" aria-label="Más productos de ${category}">›</button>
+                </div>
+              </div>
+              <div class="catalog-track" id="${trackId}" data-carousel role="region" aria-label="Productos de ${category}">
+                ${products.map((product) => `
+                  <article class="item catalog-product">
+                    <div class="item-visual" data-label="menu">${categoryIcons[category] || "🍨"}</div>
+                    <div class="item-body">
+                      <div class="item-top">
+                        <h3>${product.name}</h3>
+                        <strong>${money.format(product.price)}</strong>
+                      </div>
+                      <p>${category}</p>
+                      <div class="meta">
+                        <span class="tag-mini">Disponible</span>
+                        <button class="mini-btn" type="button" data-add="${product.name}">+ Añadir</button>
+                      </div>
+                    </div>
+                  </article>
+                `).join("")}
+              </div>
+            </section>
+          `;
+        }).join("");
+        catalogRows.querySelectorAll("[data-carousel]").forEach(updateCarouselButtons);
+      }
+
+      function updateCarouselButtons(track) {
+        const controls = catalogRows.querySelectorAll(`[data-carousel-target="${track.id}"]`);
+        const maxScroll = track.scrollWidth - track.clientWidth;
+        controls.forEach((button) => {
+          button.disabled = button.dataset.scroll === "-1"
+            ? track.scrollLeft <= 1
+            : track.scrollLeft >= maxScroll - 1;
+        });
+      }
+
+      function renderOrder() {
+        const selected = menuProducts.filter((product) => quantities.has(product.name));
+        const itemCount = [...quantities.values()].reduce((sum, quantity) => sum + quantity, 0);
+        const total = selected.reduce((sum, product) => sum + product.price * quantities.get(product.name), 0);
+
+        orderItems.innerHTML = selected.map((product) => `
+          <li class="order-line">
+            <span class="order-line-name">${product.name}<small>${money.format(product.price)} c/u</small></span>
+            <div class="quantity-controls" aria-label="Cantidad de ${product.name}">
+              <button class="quantity-button" type="button" data-change="${product.name}" data-amount="-1" aria-label="Quitar uno de ${product.name}">−</button>
+              <span>${quantities.get(product.name)}</span>
+              <button class="quantity-button" type="button" data-change="${product.name}" data-amount="1" aria-label="Agregar uno de ${product.name}">+</button>
+            </div>
+          </li>
+        `).join("");
+        document.querySelector("#order-count").textContent = `${itemCount} ${itemCount === 1 ? "producto" : "productos"}`;
+        document.querySelector("#order-total").textContent = money.format(total);
+        document.querySelector("#order-empty").hidden = selected.length > 0;
+      }
+
+      catalogRows.addEventListener("click", (event) => {
+        const scrollButton = event.target.closest("[data-carousel-target]");
+        if (scrollButton) {
+          const track = document.getElementById(scrollButton.dataset.carouselTarget);
+          track.scrollBy({ left: track.clientWidth * Number(scrollButton.dataset.scroll) * 0.8, behavior: "smooth" });
+          return;
+        }
+
+        const addButton = event.target.closest("[data-add]");
+        if (!addButton) return;
+        const name = addButton.dataset.add;
+        quantities.set(name, (quantities.get(name) || 0) + 1);
+        renderOrder();
+      });
+
+      catalogRows.addEventListener("scroll", (event) => {
+        const track = event.target.closest("[data-carousel]");
+        if (track) updateCarouselButtons(track);
+      }, true);
+
+      catalogRows.addEventListener("keydown", (event) => {
+        if (!event.target.matches("[data-carousel]")) return;
+        if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+          event.preventDefault();
+          event.target.scrollBy({ left: event.key === "ArrowRight" ? 260 : -260, behavior: "smooth" });
+        }
+      });
+
+      orderItems.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-change]");
+        if (!button) return;
+        const name = button.dataset.change;
+        const nextQuantity = (quantities.get(name) || 0) + Number(button.dataset.amount);
+        if (nextQuantity > 0) quantities.set(name, nextQuantity);
+        else quantities.delete(name);
+        renderOrder();
+      });
+
+      renderCatalog();
+      renderOrder();
+    </script>
   </body>
 </html>
